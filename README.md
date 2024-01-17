@@ -13,3 +13,8 @@ change the test in package.json to jest
 ========================
 you also need to integrate the git bash which provides command line interface like experience in the vscode by using the open settings(json) file and adding the command in it
 so that you can use the git commands in the vscode terminal itself
+===========================
+COMMANDS 
+git add .
+git commit -m "[message]"
+git push origin main (the name of the file or branch is main)
