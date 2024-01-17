@@ -1,0 +1,15 @@
+{
+  "name": "webcrawler",
+  "version": "1.0.0",
+  "description": "a project to learn http \r git setup\r nvm install for windows",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
