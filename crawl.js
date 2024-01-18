@@ -1,28 +1,51 @@
 const { JSDOM } = require("jsdom");
 
-async function crawlPage(currentURL) {
+async function crawlPage(baseURL, currentURL, pages) {
+  const baseURLobj = new URL(baseURL);
+  const currentURLobj = new URL(currentURL);
+  if (baseURLobj.hostname !== currentURLobj.hostname) {
+    return pages;
+  }
+
+  const normalisedurl = normalizeURL(currentURL);
+  if (pages[normalisedurl] > 0) {
+    pages[normalisedurl]++;
+    return pages;
+  }
+  pages[normalisedurl] = 1;
+
   console.log(`actively crawling : ${currentURL}`);
   try {
     const response = await fetch(currentURL);
+    //CHECKING THE RESPONSE STATUS OF THE FETCH RESPONSE
     if (response.status > 399) {
       console.log(
         `Error in fetch url with status code :${response.status} on page: ${currentURL}`
       );
-      return;
+      return pages;
     }
-
+    //CHECKING THE DOCUMENT TYPE OF THE RESPONSE
     const getContentType = response.headers.get("content-type"); //npm start http://wagslane.dev/sitemap.xml will trigger this
     if (!getContentType.includes("text/html")) {
       console.log(
         `non html response ,content type: ${getContentType} on : ${currentURL}`
       );
-      return;
+      return pages;
     }
+    //GETTING THE RESPONSE BODY FROM THE FETCH
+    const htmlbody = await response.text();
 
-    console.log(await response.text());
+    //TAKING OUT THE URLS FROM THE HTML BODY
+    const nextUrls = getURLFromHTML(htmlbody, baseURL);
+
+    //CRAWLING THE URLS IN THE HTML BODY
+    for (const nexturl of nextUrls) {
+      pages = await crawlPage(baseURL, nexturl, pages);
+    }
   } catch (err) {
     console.log(`error in fetch: ${err.message} on ${currentURL}`);
   }
+  return pages;
 }
 
 function getURLFromHTML(htmlbody, baseURL) {
