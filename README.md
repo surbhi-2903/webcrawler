@@ -18,3 +18,9 @@ COMMANDS
 git add .
 git commit -m "[message]"
 git push origin main (the name of the file or branch is main)
+==============================================
+devDependencies are used during development such as testing building and other dev related process by the developers themselves but not during production build but is not required in its runtime operations
+we install them as npm install --save-dev package-name
+normal dependencies are used by the application when its running 
+============================================
+npm install jsdom
